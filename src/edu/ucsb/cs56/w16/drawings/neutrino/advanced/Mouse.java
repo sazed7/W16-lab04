@@ -11,6 +11,14 @@ import java.awt.geom.Ellipse2D;
 import edu.ucsb.cs56.w16.drawings.utilities.ShapeTransforms;
 import edu.ucsb.cs56.w16.drawings.utilities.GeneralPathWrapper;
 
+/**
+   A Mouse
+      
+   @author Abhijit Kulkarni
+   @version for CS56, W16, UCSB
+   
+*/
+
 public class Mouse extends GeneralPathWrapper implements Shape 
 {
 	double xcoord;
@@ -56,9 +64,7 @@ public class Mouse extends GeneralPathWrapper implements Shape
       	Line2D.Double bottopline =
       					new Line2D.Double(xcoord+.5*width,ycoord+button_y-.25*height,xcoord+.5*width,ycoord+button_y-.4*height);
 
-
       	GeneralPath wholeMouse = this.get();
-
 
       	wholeMouse.append(mouse,false);
       	wholeMouse.append(bottomline,false);
