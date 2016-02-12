@@ -37,11 +37,18 @@ public class AnimatedPictureComponent extends JComponent
 	private Shape mouse;
 	private double startingXpos;
 	private double startingYpos;
+	private double startingWidth;
+	private double startingHeight;
 	private double xpos;
 	private double ypos;
 	private double width;
 	private double height;
 	private double dx;
+	private int mouseX;
+	private int mouseY;
+	private boolean clicked;
+	private boolean shrink;
+	private double rotate_factor;
 
 	/** 
 		Constructs an AnimatedPictureComponent with the specified properties.
@@ -52,7 +59,7 @@ public class AnimatedPictureComponent extends JComponent
 		@param width the starting width of the mouse
 		@param height the starting height of the mouse
 	*/
-	public AnimatedPictureComponent(int startingXpos, int startingYpos, int width, int height)
+	public AnimatedPictureComponent(double startingXpos, double startingYpos, double width, double height)
 	{
 		this.startingXpos = startingXpos;
 		this.startingYpos = startingYpos;
@@ -60,11 +67,30 @@ public class AnimatedPictureComponent extends JComponent
 		this.ypos = startingYpos;
 		this.width = width;
 		this.height = height;
+		this.startingWidth = width;
+		this.startingHeight = height;
 		this.dx = 5;
-
-		mouse = new SteelSeriesMouse(this.startingXpos, this.startingYpos, this.width, this.height);
+		this.mouseX = -5;
+		this.mouseY = -5;
+		this.clicked = false;
+		shrink = false;
+		rotate_factor = 1;
+		mouse = new SteelseriesMouse(this.startingXpos, this.startingYpos, this.width, this.height);
 	}
 
+	/**
+		Updates mouse coordinates if user clicks inside the mouse
+		@param mouseX the x coordinate clicked
+		@param mouseY the y coordinated clicked
+	*/
+	public void mouseClicked(int mouseX, int mouseY){
+		this.mouseX = mouseX;
+		this.mouseY = mouseY;
+		if(mouseX >=xpos && mouseX <= xpos+width && mouseY >=ypos && mouseY <= ypos+height)
+			clicked = true;
+		else
+			clicked = false;
+	}
 	/**
 		The paintComponent() method is overridden to display the animation.
 		Each time this method is called, the pos of the mouse is updated.
@@ -72,15 +98,45 @@ public class AnimatedPictureComponent extends JComponent
 	public void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D) g;
-		if(xpos >= startingXpos + 200){
+		if(xpos >= startingXpos + 270 || xpos < startingXpos){
 			dx *= -1;
 		}
-		
+		if(clicked){
+			int red = (int)(Math.random() * 256);
+			int green = (int)(Math.random()*256);
+			int blue = (int)(Math.random()*256);
+			Color c = new Color(red,green,blue);
+
+			g2.setColor(c);
+			if(shrink == false){
+				width *= 1.05;
+				height *= 1.05;
+				rotate_factor += .5;
+				mouse = ShapeTransforms.scaledCopyOf(mouse,1.05,1.05);
+				if(width >= startingWidth * 3)
+					shrink = true;
+			}
+			else if(shrink == true){
+				width *= .95;
+				height *= .95;
+				mouse = ShapeTransforms.scaledCopyOf(mouse,.95,.95);
+				rotate_factor -= .5;
+				if(width <= startingWidth)
+					shrink = false;
+			}
+			
+			mouse = ShapeTransforms.rotatedCopyOf(mouse,Math.PI/(rotate_factor));
+
+		}
+		else
+			g2.setColor(Color.LIGHT_GRAY);
+		g2.fill(mouse);
 		g2.setColor(Color.BLACK);
 		g2.draw(mouse);
-
+		g2.drawString("Click the mouse to see something fun!", 190, 50);
 		xpos += dx;
 
 		mouse = ShapeTransforms.translatedCopyOf(mouse, dx, 0);
+	}
 
 }
