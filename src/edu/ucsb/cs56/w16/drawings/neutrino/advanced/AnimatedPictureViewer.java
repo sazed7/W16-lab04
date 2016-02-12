@@ -65,7 +65,7 @@ import java.awt.Color;
 	 		try{
 	 			while(true)
 	 			{
-	 				display(50);
+	 				display(40);
 	 			}
 	 		}catch(Exception ex){
 	 			if(ex instanceof InterruptedException){

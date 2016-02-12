@@ -111,7 +111,7 @@ public class AnimatedPictureComponent extends JComponent
 			if(shrink == false){
 				width *= 1.05;
 				height *= 1.05;
-				rotate_factor += .5;
+				rotate_factor += .5*1.15;
 				mouse = ShapeTransforms.scaledCopyOf(mouse,1.05,1.05);
 				if(width >= startingWidth * 3)
 					shrink = true;
@@ -120,11 +120,10 @@ public class AnimatedPictureComponent extends JComponent
 				width *= .95;
 				height *= .95;
 				mouse = ShapeTransforms.scaledCopyOf(mouse,.95,.95);
-				rotate_factor -= .5;
-				if(width <= startingWidth)
+				rotate_factor -= (.5/1.5);
+				if(width <= startingWidth*.3333)
 					shrink = false;
 			}
-			
 			mouse = ShapeTransforms.rotatedCopyOf(mouse,Math.PI/(rotate_factor));
 
 		}
